@@ -1,20 +1,13 @@
 # Homelab Kubernetes Cluster
 
-This repository contains the configuration and documentation for my Kubernetes homelab cluster, set up with assistance from ChatGPT.
+This cluster runs on Raspberry Pi devices with k3s and MetalLB. It exposes web apps via Ingress NGINX using NodePort routing for compatibility and simplicity.
 
-## Overview
+## Components
 
-- **Infrastructure Components**:
-  - [MetalLB](infra/metallb/): LoadBalancer implementation for bare-metal Kubernetes clusters.
-  - [Ingress-NGINX](infra/ingress-nginx/): Ingress controller for managing external access to services.
+- [Ingress NGINX](infra/ingress-nginx/README.md)
+- [Monitoring Stack (Grafana)](apps/monitoring/README.md)
 
-- **Applications**:
-  - [Monitoring Stack](apps/monitoring/): Includes Prometheus and Grafana for cluster monitoring.
+## Setup Notes
 
-## Setup Instructions
-
-Detailed setup instructions and notes are available in the [docs](docs/) directory.
-
-## Acknowledgments
-
-Special thanks to ChatGPT for guidance during the setup process.
+- MetalLB was installed and initially configured but replaced with NodePort for stability.
+- Pi-hole DNS is used for `.local.lab` hostnames.

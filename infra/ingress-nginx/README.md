@@ -30,3 +30,27 @@ kubectl get svc -n ingress-nginx ingress-nginx-controller
 ```
 
 Update your DNS records or local `/etc/hosts` file to map desired hostnames to this IP.
+
+# Ingress NGINX (NodePort Setup)
+
+This config installs NGINX Ingress Controller using a NodePort service on a k3s cluster, optimized for Raspberry Pi nodes.
+
+## Installation
+
+```bash
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --set controller.service.type=NodePort \
+  --set controller.service.nodePorts.http=30080 \
+  --set controller.service.nodePorts.https=30443 \
+  --set controller.service.externalTrafficPolicy=Cluster
+```
+
+## Pi-hole DNS Setup
+
+Point `grafana.local.lab` to the LAN IP of the node running Ingress (e.g., `10.0.0.186`).
+
+## Why NodePort?
+
+HostPort binding on Raspberry Pi (k3s + ARM) often fails due to security restrictions.
+NodePort offers a stable workaround without requiring privileged containers.
