@@ -1,3 +1,4 @@
+# IP address pool for MetalLB
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
@@ -5,13 +6,55 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 10.0.0.201-10.0.0.209
+    - 10.0.0.201-10.0.0.209
 
 ---
+# L2 advertisement config
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
 metadata:
   name: homelab-l2
   namespace: metallb-system
-spec: {}
 
+---
+# Optional: Patch speaker daemonset to include a liveness probe
+# Note: Assumes you're applying this *after* deploying MetalLB using `kubectl apply -f https://...`
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: speaker
+  namespace: metallb-system
+spec:
+  template:
+    spec:
+      containers:
+        - name: speaker
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 7472
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+---
+# Optional: Patch controller deployment to include a liveness probe
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller
+  namespace: metallb-system
+spec:
+  template:
+    spec:
+      containers:
+        - name: controller
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 7472
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
