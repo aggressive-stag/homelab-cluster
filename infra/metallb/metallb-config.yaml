@@ -15,3 +15,14 @@ kind: L2Advertisement
 metadata:
   name: homelab-l2
   namespace: metallb-system
+
+---
+# Memberlist secret for MetalLB
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: metallb-system
+  name: memberlist
+type: Opaque
+data:
+  secretkey: Q7oC2iRvjgodFjtZ6CeeAlu1I9QAlW4X3GjRdBwwNYU0IYcdFMUGmvGNXN51Gea569c62GLjQhPPM95hNPRWTBdUL1t32XoahQkB9OkmTpA+RfNmpk3cqoOGm0szi3cnG0DiyKbrlvVdlRKlLWxKU7b4jC8WgnPsKhTzxxYM+Og=
